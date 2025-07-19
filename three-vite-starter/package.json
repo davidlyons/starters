@@ -1,0 +1,19 @@
+{
+  "name": "three-vite-starter",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "devDependencies": {
+    "vite": "^7.0.5",
+    "vite-plugin-restart": "^1.0.0"
+  },
+  "dependencies": {
+    "gsap": "^3.13.0",
+    "lil-gui": "^0.20.0",
+    "three": "^0.178.0"
+  }
+}

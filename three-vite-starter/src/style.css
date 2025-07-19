@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  background-color: #333;
+  color: #fff;
+  font-size: 13px;
+  line-height: 20px;
+  overflow: hidden;
+}
+
+.webgl {
+  position: fixed;
+  top: 0;
+  left: 0;
+  outline: none;
+}

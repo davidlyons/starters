@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>R3F Babel Starter</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+          'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background: white;
+      }
+
+      #canvas-container {
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@19.1.0?dev",
+          "react/": "https://esm.sh/react@19.1.0&dev/",
+          "react-dom": "https://esm.sh/react-dom@19.1.0?dev",
+          "react-dom/": "https://esm.sh/react-dom@19.1.0&dev/",
+          "@react-three/fiber": "https://esm.sh/@react-three/fiber@alpha?dev&external=react,react-dom,three",
+          "three": "https://cdn.jsdelivr.net/npm/three@0.177.0/build/three.module.js",
+          "three/webgpu": "https://cdn.jsdelivr.net/npm/three@0.177.0/build/three.webgpu.js",
+          "three/tsl": "https://cdn.jsdelivr.net/npm/three@0.177.0/build/three.tsl.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.177.0/examples/jsm/"
+        }
+      }
+    </script>
+
+    <script type="module" src="https://esm.sh/run"></script>
+
+    <script type="text/babel">
+      // https://github.com/pmndrs/react-three-fiber/issues/3350#issuecomment-2348276683
+
+      import { createRoot } from 'react-dom/client'
+      import React, { useRef, useState } from 'react'
+      import { Canvas, useFrame, useThree, extend } from '@react-three/fiber'
+      import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
+      import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+      import * as THREE from 'three/webgpu'
+      import * as TSL from 'three/tsl'
+
+      extend({ OrbitControls, RoundedBoxGeometry })
+
+      function Box(props) {
+        const meshRef = useRef()
+        const [hovered, setHover] = useState(false)
+        const [active, setActive] = useState(false)
+
+        useFrame(() => (meshRef.current.rotation.x = meshRef.current.rotation.y += 0.01))
+
+        return (
+          <mesh
+            {...props}
+            ref={meshRef}
+            scale={active ? 1.5 : 1}
+            onClick={() => setActive(!active)}
+            onPointerOver={() => setHover(true)}
+            onPointerOut={() => setHover(false)}
+          >
+            <roundedBoxGeometry args={[1, 1, 1]} />
+            <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />
+          </mesh>
+        )
+      }
+
+      function Controls() {
+        const camera = useThree((state) => state.camera)
+        const gl = useThree((state) => state.gl)
+
+        // Will only initialize when tree is connected to screen
+        return <orbitControls args={[camera, gl.domElement]} />
+      }
+
+      function App() {
+        return (
+          <div id="canvas-container">
+            <Canvas
+              gl={async (props) => {
+                const renderer = new THREE.WebGPURenderer(props)
+                await renderer.init()
+                return renderer
+              }}
+            >
+              <Controls />
+              <ambientLight />
+              <directionalLight position={[10, 10, 10]} />
+              <Box position={[-1.2, 0, 0]} />
+              <Box position={[1.2, 0, 0]} />
+            </Canvas>
+          </div>
+        )
+      }
+
+      createRoot(document.getElementById('root')).render(<App />)
+    </script>
+  </body>
+</html>

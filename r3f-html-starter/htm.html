@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>R3F HTM Starter</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+          'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background: white;
+      }
+
+      #canvas-container {
+        width: 100vw;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "react": "https://esm.sh/react@latest?dev",
+          "react/": "https://esm.sh/react@latest&dev/",
+          "react-dom": "https://esm.sh/react-dom@latest?dev",
+          "react-dom/": "https://esm.sh/react-dom@latest&dev/",
+          "@react-three/fiber": "https://esm.sh/@react-three/fiber@alpha?dev&external=react,react-dom",
+          "htm": "https://esm.sh/htm?dev"
+        }
+      }
+    </script>
+
+    <script type="module">
+      // https://docs.pmnd.rs/react-three-fiber/getting-started/installation#without-build-tools
+
+      import { createRoot } from 'react-dom/client'
+      import React, { useRef, useState } from 'react'
+      import { Canvas, useFrame } from '@react-three/fiber'
+      import htm from 'htm'
+
+      const html = htm.bind(React.createElement)
+
+      function Box(props) {
+        const meshRef = useRef()
+        const [hovered, setHover] = useState(false)
+        const [active, setActive] = useState(false)
+
+        useFrame(() => (meshRef.current.rotation.x = meshRef.current.rotation.y += 0.01))
+
+        return html`
+          <mesh
+            ...${props}
+            ref=${meshRef}
+            scale=${active ? 1.5 : 1}
+            onClick=${() => setActive(!active)}
+            onPointerOver=${() => setHover(true)}
+            onPointerOut=${() => setHover(false)}
+          >
+            <boxGeometry args=${[1, 1, 1]} />
+            <meshStandardMaterial color=${hovered ? 'hotpink' : 'orange'} />
+          </mesh>
+        `
+      }
+
+      createRoot(document.getElementById('root')).render(
+        html`
+          <div id="canvas-container">
+            <${Canvas}>
+              <ambientLight />
+              <directionalLight position=${[10, 10, 10]} />
+              <${Box} position=${[-1.2, 0, 0]} />
+              <${Box} position=${[1.2, 0, 0]} />
+            <//>
+          </div>
+        `
+      )
+    </script>
+  </body>
+</html>
