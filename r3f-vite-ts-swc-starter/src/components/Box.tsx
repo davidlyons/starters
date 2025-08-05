@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { useRef, useState } from 'react'
+import { useRef, useState, type JSX } from 'react'
 import { useFrame } from '@react-three/fiber'
 
 export function Box(props: JSX.IntrinsicElements['mesh']) {
