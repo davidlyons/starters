@@ -6,6 +6,11 @@ import path from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   root: 'src/',
+  build: {
+    outDir: '../dist',
+    emptyOutDir: true,
+    sourcemap: true,
+  },
   publicDir: '../public/',
   base: './',
   plugins: [react(), tailwindcss()],
