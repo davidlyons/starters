@@ -1,6 +1,7 @@
-import * as THREE from 'three'
+import * as THREE from 'three/webgpu'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
+import { checker, uv, uniform, convertToTexture } from 'three/tsl'
 import { GUI } from 'lil-gui'
 import gsap from 'gsap'
 
@@ -13,10 +14,11 @@ const sizes = {
   height: window.innerHeight,
 }
 
-const renderer = new THREE.WebGLRenderer({
+const renderer = new THREE.WebGPURenderer({
   canvas: canvas,
   antialias: true,
 })
+
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 renderer.setSize(sizes.width, sizes.height)
 renderer.setClearColor('#111', 1)
@@ -51,33 +53,79 @@ const axesHelper = new THREE.AxesHelper()
 axesHelper.position.y = 0.01
 scene.add(axesHelper)
 
-// -----------------------------------------------------------
-
-const debugObject = {}
-
-// Three.js applies color management and modifies the color internally
-// save non-modified color outside so the picker is the same value
-debugObject.color = '#a778d8'
-
-const geometry = new RoundedBoxGeometry(1, 1, 1, 2, 0.12)
-const material = new THREE.MeshPhongMaterial({ color: debugObject.color, side: THREE.DoubleSide })
-const cube = (window.cube = new THREE.Mesh(geometry, material))
-scene.add(cube)
+THREE.DefaultLoadingManager.onLoad = function () {
+  console.log('Loading Complete!')
+}
 
 const gui = new GUI()
-const cubeFolder = gui.addFolder('Cube')
 
 window.addEventListener('keydown', (event) => {
   if (event.key == 'h') gui.show(gui._hidden)
 })
 
+const debugObject = {}
+
+const textureLoader = new THREE.TextureLoader()
+
+// --------------------------------------------------------------------
+
+// Three.js applies color management and modifies the color internally
+// save non-modified color outside so the picker is the same value
+debugObject.color = '#a778d8'
+
+const geometry = new RoundedBoxGeometry(1, 1, 1, 4, 0.12)
+const material = new THREE.MeshPhongMaterial({ color: debugObject.color, side: THREE.DoubleSide })
+const cube = (window.cube = new THREE.Mesh(geometry, material))
+scene.add(cube)
+
+const cubeFolder = gui.addFolder('Cube')
+
 cubeFolder.add(cube.rotation, 'y', -Math.PI, Math.PI, 0.01)
 cubeFolder.addColor(debugObject, 'color').onChange(() => material.color.set(debugObject.color))
 
-debugObject.move = () => gsap.to(cube.position, { duration: 1, delay: 0, x: cube.position.x < 1 ? 2 : 0 })
+debugObject.move = () => gsap.to(cube.position, { duration: 1, delay: 0, z: cube.position.z < 1 ? 2 : 0 })
 cubeFolder.add(debugObject, 'move')
 
-// -----------------------------------------------------------
+// ---------------------------------
+
+// checker texture
+
+// https://uvchecker.vinzi.xyz/
+const texture2 = textureLoader.load('/textures/uv-checker-2k-gambit.png')
+
+// textures used on the map or matcap properties of a material are supposed to be encoded in sRGB
+texture2.colorSpace = THREE.SRGBColorSpace
+
+texture2.repeat.setScalar(0.25)
+texture2.wrapS = THREE.RepeatWrapping
+texture2.wrapT = THREE.RepeatWrapping
+
+const material2 = new THREE.MeshBasicMaterial({ map: texture2 })
+const cube2 = new THREE.Mesh(geometry, material2)
+scene.add(cube2)
+cube2.position.x = -1.5
+
+// ----------------------------------
+
+// checker TSL shader
+// https://threejs.org/examples/?q=texture#webgpu_procedural_texture
+
+const uvScale = uniform(1)
+
+const procedural = checker(uv().mul(uvScale))
+const colorNode = convertToTexture(procedural, 512, 512) // ( node, width, height )
+
+const material3 = new THREE.MeshBasicNodeMaterial()
+material3.colorNode = colorNode
+
+const cube3 = new THREE.Mesh(geometry, material3)
+scene.add(cube3)
+cube3.position.x = 1.5
+
+const checkerFolder = gui.addFolder('Checker shader')
+checkerFolder.add(uvScale, 'value', 1, 10).step(1).name('uv scale')
+
+// --------------------------------------------------------------------
 
 window.addEventListener('resize', () => {
   sizes.width = window.innerWidth
