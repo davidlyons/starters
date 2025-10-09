@@ -8,7 +8,7 @@
     "build": "vite build"
   },
   "devDependencies": {
-    "vite": "^7.1.4",
+    "vite": "^7.1.9",
     "vite-plugin-restart": "^1.0.0"
   },
   "dependencies": {
