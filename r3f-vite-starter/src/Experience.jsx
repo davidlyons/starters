@@ -1,6 +1,7 @@
 import { useThree, extend, useFrame } from '@react-three/fiber'
-import { useRef } from 'react'
+import { useRef, useEffect } from 'react'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
+import { GUI } from 'lil-gui'
 import CustomObject from './CustomObject.jsx'
 
 extend({ OrbitControls })
@@ -11,14 +12,17 @@ export default function Experience() {
   const cubeRef = useRef()
   const groupRef = useRef()
 
-  useFrame((state, delta) => {
-    // const angle = state.clock.elapsedTime
-    // state.camera.position.x = Math.sin(angle) * 8
-    // state.camera.position.z = Math.cos(angle) * 8
-    // state.camera.lookAt(0, 0, 0)
+  useEffect(() => {
+    const gui = new GUI()
+    gui.add(cubeRef.current.position, 'x', -5, 5)
 
+    return () => {
+      gui.destroy()
+    }
+  }, [])
+
+  useFrame((state, delta) => {
     cubeRef.current.rotation.y += delta
-    // groupRef.current.rotation.y += delta
   })
 
   return (
