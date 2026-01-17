@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -11,8 +11,9 @@
 
       body {
         margin: 0;
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
-          'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+        font-family:
+          -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell',
+          'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
         background: white;
@@ -34,21 +35,28 @@
           "react/": "https://esm.sh/react@latest&dev/",
           "react-dom": "https://esm.sh/react-dom@latest?dev",
           "react-dom/": "https://esm.sh/react-dom@latest&dev/",
-          "@react-three/fiber": "https://esm.sh/@react-three/fiber@alpha?dev&external=react,react-dom",
+          "@react-three/fiber": "https://esm.sh/@react-three/fiber@alpha?dev&external=react,react-dom,three",
+          "three": "https://esm.sh/three@0.182.0/build/three.module.js",
+          "three/webgpu": "https://esm.sh/three@0.182.0/build/three.webgpu.js",
+          "three/tsl": "https://esm.sh/three@0.182.0/build/three.tsl.js",
+          "three/addons/": "https://esm.sh/three@0.182.0/examples/jsm/",
           "htm": "https://esm.sh/htm?dev"
         }
       }
     </script>
 
     <script type="module">
-      // https://docs.pmnd.rs/react-three-fiber/getting-started/installation#without-build-tools
+      // https://r3f.docs.pmnd.rs/getting-started/installation#without-build-tools
 
       import { createRoot } from 'react-dom/client'
       import React, { useRef, useState } from 'react'
-      import { Canvas, useFrame } from '@react-three/fiber'
+      import { Canvas, useFrame, extend } from '@react-three/fiber'
+      import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
       import htm from 'htm'
 
       const html = htm.bind(React.createElement)
+
+      extend({ RoundedBoxGeometry })
 
       function Box(props) {
         const meshRef = useRef()
@@ -66,24 +74,22 @@
             onPointerOver=${() => setHover(true)}
             onPointerOut=${() => setHover(false)}
           >
-            <boxGeometry args=${[1, 1, 1]} />
+            <roundedBoxGeometry args=${[1, 1, 1]} />
             <meshStandardMaterial color=${hovered ? 'hotpink' : 'orange'} />
           </mesh>
         `
       }
 
-      createRoot(document.getElementById('root')).render(
-        html`
-          <div id="canvas-container">
-            <${Canvas}>
-              <ambientLight />
-              <directionalLight position=${[10, 10, 10]} />
-              <${Box} position=${[-1.2, 0, 0]} />
-              <${Box} position=${[1.2, 0, 0]} />
-            <//>
-          </div>
-        `
-      )
+      createRoot(document.getElementById('root')).render(html`
+        <div id="canvas-container">
+          <${Canvas}>
+            <ambientLight />
+            <directionalLight position=${[10, 10, 10]} />
+            <${Box} position=${[-1.2, 0, 0]} />
+            <${Box} position=${[1.2, 0, 0]} />
+          <//>
+        </div>
+      `)
     </script>
   </body>
 </html>

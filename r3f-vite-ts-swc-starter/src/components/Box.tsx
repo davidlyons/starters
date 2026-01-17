@@ -7,8 +7,8 @@ export function Box(props: JSX.IntrinsicElements['mesh']) {
   const ref = useRef<THREE.Mesh>(null!)
 
   // Hold state for hovered and clicked events
-  const [hovered, hover] = useState(false)
-  const [clicked, click] = useState(false)
+  const [hovered, setHovered] = useState(false)
+  const [clicked, setClicked] = useState(false)
 
   // Rotate mesh every frame, this is outside of React without overhead
   useFrame((state, delta) => (ref.current.rotation.x += 0.01))
@@ -18,9 +18,9 @@ export function Box(props: JSX.IntrinsicElements['mesh']) {
       {...props}
       ref={ref}
       scale={clicked ? 1.5 : 1}
-      onClick={(event) => click(!clicked)}
-      onPointerOver={(event) => hover(true)}
-      onPointerOut={(event) => hover(false)}
+      onClick={(event) => setClicked(!clicked)}
+      onPointerOver={(event) => setHovered(true)}
+      onPointerOut={(event) => setHovered(false)}
     >
       <boxGeometry args={[1, 1, 1]} />
       <meshStandardMaterial color={hovered ? 'hotpink' : 'orange'} />

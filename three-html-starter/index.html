@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -21,15 +21,17 @@
     <script type="importmap">
       {
         "imports": {
-          "three": "https://cdn.jsdelivr.net/npm/three@0.181.0/build/three.module.js",
-          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.181.0/examples/jsm/",
+          "three": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.webgpu.js",
+          "three/webgpu": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.webgpu.js",
+          "three/tsl": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.tsl.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.182.0/examples/jsm/",
           "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.21.0/+esm"
         }
       }
     </script>
 
     <script type="module">
-      import * as THREE from 'three'
+      import * as THREE from 'three/webgpu'
       import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
       import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
       import { GUI } from 'lil-gui'
@@ -39,7 +41,7 @@
 
       const scene = new THREE.Scene()
 
-      const renderer = new THREE.WebGLRenderer({ antialias: true })
+      const renderer = new THREE.WebGPURenderer({ antialias: true })
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
       renderer.setSize(window.innerWidth, window.innerHeight)
       container.appendChild(renderer.domElement)
