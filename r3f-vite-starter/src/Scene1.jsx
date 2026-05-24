@@ -1,14 +1,9 @@
-import { useThree, extend, useFrame } from '@react-three/fiber'
+import { useFrame } from '@react-three/fiber'
 import { useRef, useEffect } from 'react'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GUI } from 'lil-gui'
 import CustomObject from './CustomObject.jsx'
 
-extend({ OrbitControls })
-
-export default function Experience() {
-  const { camera, gl } = useThree()
-
+export default function Scene1() {
   const cubeRef = useRef()
   const groupRef = useRef()
 
@@ -27,11 +22,6 @@ export default function Experience() {
 
   return (
     <>
-      <orbitControls args={[camera, gl.domElement]} />
-
-      <directionalLight position={[1, 2, 3]} intensity={1.5} />
-      <ambientLight intensity={0.5} />
-
       <group ref={groupRef}>
         <mesh position-x={-2}>
           <sphereGeometry />
