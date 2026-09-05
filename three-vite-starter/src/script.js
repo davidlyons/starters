@@ -111,7 +111,6 @@ cube2.position.x = -1.5
 // https://threejs.org/examples/?q=texture#webgpu_procedural_texture
 
 const uvScale = uniform(1)
-
 const procedural = checker(uv().mul(uvScale))
 const colorNode = convertToTexture(procedural, 512, 512) // ( node, width, height )
 

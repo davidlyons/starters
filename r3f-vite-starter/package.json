@@ -8,18 +8,19 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@react-three/fiber": "^9.5.0",
+    "@react-three/fiber": "^9.7.0",
     "lil-gui": "^0.21.0",
-    "react": "^19.2.3",
-    "react-dom": "^19.2.3",
-    "three": "^0.182.0"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "three": "^0.185.1"
   },
   "devDependencies": {
-    "@types/react": "^19.2.8",
-    "@types/react-dom": "^19.2.3",
-    "@types/three": "^0.182.0",
-    "@vitejs/plugin-react-swc": "^4.2.2",
-    "typescript": "^5.9.3",
-    "vite": "^7.3.1"
+    "@types/node": "^26.4.1",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.7",
+    "@types/three": "^0.185.4",
+    "@vitejs/plugin-react-swc": "^4.3.3",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.2"
   }
 }

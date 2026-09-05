@@ -30,3 +30,4 @@ minimumReleaseAgeExclude:
   - prettier@3.9.4
   - tailwindcss@4.3.2
   - typescript-eslint@8.62.1
+  - eslint@10.10.0

@@ -21,10 +21,10 @@
     <script type="importmap">
       {
         "imports": {
-          "three": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.webgpu.js",
-          "three/webgpu": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.webgpu.js",
-          "three/tsl": "https://cdn.jsdelivr.net/npm/three@0.182.0/build/three.tsl.js",
-          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.182.0/examples/jsm/",
+          "three": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.webgpu.js",
+          "three/webgpu": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.webgpu.js",
+          "three/tsl": "https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.tsl.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.185.1/examples/jsm/",
           "lil-gui": "https://cdn.jsdelivr.net/npm/lil-gui@0.21.0/+esm"
         }
       }
@@ -42,8 +42,8 @@
       const scene = new THREE.Scene()
 
       const renderer = new THREE.WebGPURenderer({ antialias: true })
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
       renderer.setSize(window.innerWidth, window.innerHeight)
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
       container.appendChild(renderer.domElement)
 
       renderer.setClearColor('#222', 1)
@@ -106,20 +106,40 @@
 
       // -----------------------------------------------------------------------------------
 
+      const fov = 50
+      const planeAspectRatio = 16 / 9
+
       window.addEventListener('resize', resize, false)
       function resize() {
         camera.aspect = window.innerWidth / window.innerHeight
+
+        // fov is vertical by default
+        // "background-size: contain" effect (reverse conditions for cover)
+        // https://discourse.threejs.org/t/keeping-an-object-scaled-based-on-the-bounds-of-the-canvas-really-battling-to-explain-this-one/17574/10
+        if (camera.aspect > planeAspectRatio) {
+          // window too narrow
+          camera.fov = fov
+        } else {
+          // window too large
+          const cameraHeight = Math.tan(THREE.MathUtils.degToRad(fov / 2))
+          const ratio = camera.aspect / planeAspectRatio
+          const newCameraHeight = cameraHeight / ratio
+          camera.fov = THREE.MathUtils.radToDeg(Math.atan(newCameraHeight)) * 2
+        }
+
         camera.updateProjectionMatrix()
         renderer.setSize(window.innerWidth, window.innerHeight)
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
       }
+
+      resize()
 
       renderer.setAnimationLoop(loop)
 
       function loop() {
         TWEEN.update()
         controls.update()
-        cube.position.y = Math.sin(timeline.playhead * 2 * Math.PI) * 0.5
+        cube.position.y = Math.sin(timeline.playhead * 2 * Math.PI) * 0.2
         renderer.render(scene, camera)
       }
     </script>

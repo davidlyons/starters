@@ -16,10 +16,10 @@ import { Suzanne } from './components/Suzanne'
 import { Loader } from './components/Loader'
 import { useControls } from 'leva'
 
-// https://docs.pmnd.rs/react-three-fiber/tutorials/typescript
-// TS Starter https://codesandbox.io/s/brnsm
+// https://r3f.docs.pmnd.rs/api/typescript#typescript
+// https://r3f.docs.pmnd.rs/tutorials/v9-migration-guide#typescript-changes
 
-// https://docs.pmnd.rs/react-three-fiber/tutorials/loading-models
+// https://r3f.docs.pmnd.rs/tutorials/loading-models
 // GLTF Loader https://codesandbox.io/s/vbnbf
 
 const Scene = () => {

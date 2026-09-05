@@ -10,7 +10,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     host: true,
-    open: !('SANDBOX_URL' in process.env || 'CODESANDBOX_HOST' in process.env), // Open if it's not a CodeSandbox
+    open: true,
   },
   build: {
     outDir: '../dist',

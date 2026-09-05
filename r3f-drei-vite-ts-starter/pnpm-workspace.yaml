@@ -16,3 +16,4 @@ minimumReleaseAgeExclude:
   - react@19.2.7
   - typescript-eslint@8.60.1
   - vite@8.0.16
+  - eslint@10.10.0
