@@ -5,7 +5,7 @@ import { checker, uv, uniform, convertToTexture } from 'three/tsl'
 import { GUI } from 'lil-gui'
 import gsap from 'gsap'
 
-const canvas = document.querySelector('canvas.webgl')
+const canvas = document.querySelector('#canvas')
 
 const scene = new THREE.Scene()
 
@@ -58,6 +58,7 @@ THREE.DefaultLoadingManager.onLoad = function () {
 }
 
 const gui = new GUI()
+if (import.meta.env.PROD) gui.hide()
 
 window.addEventListener('keydown', (event) => {
   if (event.key == 'h') gui.show(gui._hidden)
